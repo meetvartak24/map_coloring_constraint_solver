@@ -152,3 +152,91 @@ void displayGraph(void)
         printf("\n");
     }
 }
+
+/* Check whether a colour is safe */
+bool isSafe(int vertex, int selectedColor)
+{
+    int i;
+
+    for (i = 0; i < vertices; i++)
+    {
+        if (graph[vertex][i] == 1 &&
+            color[i] == selectedColor)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+/* Recursive graph coloring */
+bool graphColoring(int vertex)
+{
+    int selectedColor;
+
+    /* Base case */
+    if (vertex == vertices)
+    {
+        return true;
+    }
+
+    /* Try colours from 1 to M */
+    for (selectedColor = 1;
+         selectedColor <= maxColors;
+         selectedColor++)
+    {
+        colorTrials++;
+
+        /* Check if colour is safe */
+        if (isSafe(vertex, selectedColor))
+        {
+            color[vertex] = selectedColor;
+
+            /* Move to next vertex */
+            if (graphColoring(vertex + 1))
+            {
+                return true;
+            }
+
+            /* Backtrack */
+            color[vertex] = 0;
+            backtracks++;
+        }
+    }
+
+    return false;
+}
+
+
+/* Reset solution */
+void resetSolution(void)
+{
+    int i;
+
+    for (i = 0; i < vertices; i++)
+    {
+        color[i] = 0;
+    }
+
+    colorTrials = 0;
+    backtracks = 0;
+}
+
+
+/* Enter number of colours */
+void enterColors(void)
+{
+    do
+    {
+        printf("\nEnter maximum number of colours (M): ");
+        scanf("%d", &maxColors);
+
+        if (maxColors < 1)
+        {
+            printf("Number of colours must be at least 1.\n");
+        }
+
+    } while (maxColors < 1);
+}
