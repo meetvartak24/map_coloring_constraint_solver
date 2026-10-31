@@ -240,3 +240,161 @@ void enterColors(void)
 
     } while (maxColors < 1);
 }
+
+/* Display solution */
+void displaySolution(void)
+{
+    int i;
+
+    printf("\n========================================\n");
+    printf("          COLOR ASSIGNMENT\n");
+    printf("========================================\n");
+
+    printf("\nVertex\tColour\n");
+    printf("----------------\n");
+
+    for (i = 0; i < vertices; i++)
+    {
+        printf("V%-6d C%d\n", i + 1, color[i]);
+    }
+
+    printf("\nColouring is VALID.\n");
+    printf("No adjacent vertices have the same colour.\n");
+}
+
+
+/* Display statistics */
+void displayStatistics(void)
+{
+    printf("\n========================================\n");
+    printf("        BACKTRACKING STATISTICS\n");
+    printf("========================================\n");
+
+    printf("Number of vertices : %d\n", vertices);
+    printf("Number of edges    : %d\n", edges);
+    printf("Colours available  : %d\n", maxColors);
+    printf("Colour trials      : %lld\n", colorTrials);
+    printf("Backtracks         : %lld\n", backtracks);
+}
+
+
+/* Solve map coloring */
+void solveMapColoring(void)
+{
+    bool result;
+
+    if (vertices == 0)
+    {
+        printf("\nPlease create a graph first.\n");
+        return;
+    }
+
+    enterColors();
+    resetSolution();
+
+    printf("\n========================================\n");
+    printf("       STARTING BACKTRACKING\n");
+    printf("========================================\n");
+
+    result = graphColoring(0);
+
+    if (result)
+    {
+        displaySolution();
+    }
+    else
+    {
+        printf("\n========================================\n");
+        printf("             NO SOLUTION\n");
+        printf("========================================\n");
+
+        printf("\nThe graph cannot be coloured using ");
+        printf("%d colour(s).\n", maxColors);
+
+        printf("Therefore, %d colours are NOT sufficient.\n",
+               maxColors);
+    }
+
+    displayStatistics();
+}
+
+
+/* Main function */
+int main(void)
+{
+    int choice;
+
+    vertices = 0;
+    edges = 0;
+    maxColors = 0;
+
+    initializeGraph();
+
+    do
+    {
+        printf("\n\n========================================\n");
+        printf("       MAP COLORING CONSTRAINT SOLVER\n");
+        printf("========================================\n");
+
+        printf("1. Enter Graph\n");
+        printf("2. Display Graph\n");
+        printf("3. Solve Map Coloring\n");
+        printf("4. Display Solution\n");
+        printf("5. Display Statistics\n");
+        printf("6. Exit\n");
+
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+            case 1:
+                enterGraph();
+                break;
+
+            case 2:
+                displayGraph();
+                break;
+
+            case 3:
+                solveMapColoring();
+                break;
+
+            case 4:
+                if (vertices == 0)
+                {
+                    printf("\nPlease create a graph first.\n");
+                }
+                else if (color[0] == 0)
+                {
+                    printf("\nPlease solve the map coloring problem first.\n");
+                }
+                else
+                {
+                    displaySolution();
+                }
+                break;
+
+            case 5:
+                if (vertices == 0)
+                {
+                    printf("\nPlease create a graph first.\n");
+                }
+                else
+                {
+                    displayStatistics();
+                }
+                break;
+
+            case 6:
+                printf("\nThank you for using Map Coloring Solver.\n");
+                break;
+
+            default:
+                printf("\nInvalid choice! Please try again.\n");
+        }
+
+    } while (choice != 6);
+
+    return 0;
+}
